@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Intrusion Detection Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input, select {
+            padding: 6px;
+            width: 300px;
+        }
+        .slider-output {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Intrusion Detection Prediction Form</h2>
+    <form id="predictionForm">
+        {% for feature in features %}
+        <div class="form-group">
+            <label for="{{ feature }}">{{ display_names.get(feature, feature) }}</label>
+
+            {% if feature == 'state' %}
+                <select name="{{ feature }}" required>
+                    {% for val in states %}
+                        <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            {% elif feature == 'protocol' %}
+                <select name="{{ feature }}" required>
+                    {% for val in protocols %}
+                        <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            {% elif feature == 'service' %}
+                <select name="{{ feature }}" required>
+                    {% for val in services %}
+                        <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <input type="range" name="{{ feature }}" id="{{ feature }}" min="0" max="1000" step="1" value="0" oninput="document.getElementById('{{ feature }}_output').innerText = this.value">
+                <span id="{{ feature }}_output" class="slider-output">0</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        const form = document.getElementById('predictionForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            const resultDiv = document.getElementById('result');
+            const data = await response.json();
+
+            if (response.ok) {
+                resultDiv.innerHTML = `Prediction: <strong>${data.prediction}</strong><br>Confidence: <strong>${data.confidence}</strong>`;
+            } else {
+                resultDiv.innerHTML = `<span style="color:red;">Error: ${data.error}</span>`;
+            }
+        });
+    </script>
+</body>
+</html>
