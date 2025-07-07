@@ -1,38 +1,75 @@
-# Intrusion Detection System using Machine Learning (UNSW-NB15)
+# Intrusion Detection System (IDS) - UNSW-NB15
 
-This project implements an **Intrusion Detection System (IDS)** that uses machine learning algorithms to detect and classify network intrusions. It is trained on the **UNSW-NB15 dataset**, which includes a wide range of modern attacks. Among the models evaluated, **Random Forest** showed the highest accuracy and is used for final predictions.
-
----
+This project implements a machine learning-based Intrusion Detection System (IDS) using the UNSW-NB15 dataset. It preprocesses the data, selects key features, trains multiple classification models, and saves the best-performing model for future use.
 
 ## Features
 
-- Detects multiple attack types:
-  - **Fuzzers**
-  - **Exploits**
-  - **Generic**
-  - **Data Leaks**
-- Compares multiple models:
-  -  Random Forest *(Best performing)*
-  -  Support Vector Machine (SVM)
-  -  Gradient Boosting
-- Predicts whether a network connection is **Benign** or **Malicious**
-- Outputs classification reports, confusion matrices, and accuracy scores
+- Data preprocessing and label encoding for categorical features
+- Feature selection using F-score
+- Training and evaluation of Random Forest, Gradient Boosting, and KNN classifiers
+- Model comparison with accuracy and cross-validation
+- Visualization of model performance
+- Saving trained models and encoders for deployment
 
----
+## Dataset
 
-##  Models Compared
+- **UNSW_NB15_training.csv**: Training data
+- **UNSW_NB15_testing.csv**: Testing data
 
-| Model              | Accuracy | Notes                        |
-|-------------------|----------|------------------------------|
-| Random Forest      | Highest | Selected for final prediction |
-| SVM                | Moderate | Good, but slower on large data |
-| Gradient Boosting  | Good     | Competitive, but overfits slightly |
+## Requirements
 
----
+- Python 3.7+
+- pandas
+- scikit-learn
+- seaborn
+- matplotlib
 
-##  Dataset
+Install dependencies with:
 
-- **Name:** UNSW-NB15
-- **Source:** [UNSW Cyber Range Lab](https://www.unsw.adfa.edu.au/unsw-canberra-cyber/cybersecurity/ADFA-NB15-Datasets/)
-- **Classes:** Benign and 9 Attack Types (filtered to 4 for this project)
+```sh
+pip install pandas scikit-learn seaborn matplotlib
+```
+
+## Usage
+
+1. **Prepare the data**  
+   Place `UNSW_NB15_training.csv` and `UNSW_NB15_testing.csv` in the project directory.
+
+2. **Run the notebook**  
+   Open `reference_book_backend.ipynb` in VS Code or Jupyter Notebook and run all cells.
+
+3. **Model Training**  
+   The notebook will:
+   - Preprocess and encode the data
+   - Select the top 15 features
+   - Train Random Forest, Gradient Boosting, and KNN models
+   - Evaluate and compare their performance
+
+4. **Model Saving**  
+   The best-performing model (Random Forest) and label encoders are saved as `.pkl` files for later use:
+   - `rf_model.pkl`
+   - `le_service.pkl`
+   - `le_state.pkl`
+   - `le_protocol.pkl`
+   - `le_attack.pkl`
+
+## Project Structure
+
+```
+intrusion detection/
+├── reference_book_backend.ipynb
+├── UNSW_NB15_training.csv
+├── UNSW_NB15_testing.csv
+├── rf_model.pkl
+├── le_service.pkl
+├── le_state.pkl
+├── le_protocol.pkl
+├── le_attack.pkl
+└── README.md
+```
+
+## Results
+
+- The Random Forest model achieved the highest accuracy among the tested models.
+- Model performance is visualized using a bar plot.
 
